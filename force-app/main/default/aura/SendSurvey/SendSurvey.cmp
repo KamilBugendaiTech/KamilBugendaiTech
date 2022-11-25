@@ -1,0 +1,96 @@
+<aura:component controller="SendSurvey" implements="force:hasRecordId,force:lightningQuickAction" access="global">
+
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="contact" type="Object" />
+    <aura:attribute name="sendBy" type="String" default="email" />
+    <aura:attribute name="sendResponse" type="Object" />
+
+    <aura:attribute name="waiting" type="Boolean" default="false" />
+    <aura:attribute name="sent" type="Boolean" default="false" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:if isTrue="{!v.waiting}">
+        <lightning:spinner alternativeText="Loading" size="medium" />
+    </aura:if>
+
+    <div class="slds-form-element">
+        <label class="slds-form-element__label">Send Survey To</label>
+        <div class="slds-form-element__control">
+            {!v.contact.Name}
+        </div>
+    </div>
+    <br />
+
+    <lightning:select label="Send By" value="{!v.sendBy}">
+        <option value="email">Email</option>
+        <option value="phone">Phone</option>
+    </lightning:select>
+    <br />
+
+    <aura:if isTrue="{!v.sendBy == 'email'}">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label">Email</label>
+            <div class="slds-form-element__control">
+                {!v.contact.Email}
+            </div>
+        </div>
+        <br />
+    </aura:if>
+
+    <aura:if isTrue="{!v.sendBy == 'phone'}">
+        <div class="slds-form-element">
+            <label class="slds-form-element__label">Phone</label>
+            <div class="slds-form-element__control">
+                {!v.contact.Phone}
+            </div>
+        </div>
+        <br />
+    </aura:if>
+
+    <br />
+    <lightning:button variant="brand" label="Send" title="Send" onclick="{!c.SendTheSurvey}" />
+    <br />
+
+    <aura:if isTrue="{!v.sent == true}">
+        <hr />
+
+        <div class="slds-form-element">
+            <label class="slds-form-element__label">URL</label>
+            <div class="slds-form-element__control">
+                {!v.sendResponse.url}
+            </div>
+        </div>
+        <br />
+
+        <div class="slds-form-element">
+            <label class="slds-form-element__label">Request</label>
+            <div class="slds-form-element__control">
+                {!v.sendResponse.request}
+            </div>
+        </div>
+        <br />
+
+        <div class="slds-form-element">
+            <label class="slds-form-element__label">Response Code</label>
+            <div class="slds-form-element__control">
+                {!v.sendResponse.responseCode}
+            </div>
+        </div>
+        <br />
+
+        <div class="slds-form-element">
+            <label class="slds-form-element__label">Response</label>
+            <div class="slds-form-element__control">
+                {!v.sendResponse.response}
+            </div>
+        </div>
+        <br />
+
+        <aura:if isTrue="{!v.sendResponse.surveyId != null}">
+            <lightning:button variant="brand" label="Go To Created Survey" title="Go To Created Survey" onclick="{!c.GoToSurvey}" />
+        </aura:if>
+
+    </aura:if>
+
+</aura:component>
